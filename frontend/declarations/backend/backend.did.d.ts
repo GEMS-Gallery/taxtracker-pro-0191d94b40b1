@@ -12,13 +12,11 @@ export interface TaxPayer {
 }
 export interface _SERVICE {
   'addTaxPayer' : ActorMethod<[bigint, string, string, string], Result>,
+  'deleteTaxPayer' : ActorMethod<[bigint], Result>,
   'getAllTaxPayers' : ActorMethod<[], Array<TaxPayer>>,
   'getTaxPayer' : ActorMethod<[bigint], [] | [TaxPayer]>,
   'searchTaxPayer' : ActorMethod<[bigint], [] | [TaxPayer]>,
-  'updateTaxPayer' : ActorMethod<
-    [bigint, [] | [string], [] | [string], [] | [string]],
-    Result
-  >,
+  'updateTaxPayer' : ActorMethod<[bigint, string, string, string], Result>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

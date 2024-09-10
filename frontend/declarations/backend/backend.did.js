@@ -12,11 +12,12 @@ export const idlFactory = ({ IDL }) => {
         [Result],
         [],
       ),
+    'deleteTaxPayer' : IDL.Func([IDL.Nat], [Result], []),
     'getAllTaxPayers' : IDL.Func([], [IDL.Vec(TaxPayer)], ['query']),
     'getTaxPayer' : IDL.Func([IDL.Nat], [IDL.Opt(TaxPayer)], ['query']),
     'searchTaxPayer' : IDL.Func([IDL.Nat], [IDL.Opt(TaxPayer)], ['query']),
     'updateTaxPayer' : IDL.Func(
-        [IDL.Nat, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [IDL.Nat, IDL.Text, IDL.Text, IDL.Text],
         [Result],
         [],
       ),

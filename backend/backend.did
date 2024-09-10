@@ -12,8 +12,9 @@ type Result =
  };
 service : {
   addTaxPayer: (nat, text, text, text) -> (Result);
+  deleteTaxPayer: (nat) -> (Result);
   getAllTaxPayers: () -> (vec TaxPayer) query;
   getTaxPayer: (nat) -> (opt TaxPayer) query;
   searchTaxPayer: (nat) -> (opt TaxPayer) query;
-  updateTaxPayer: (nat, opt text, opt text, opt text) -> (Result);
+  updateTaxPayer: (nat, text, text, text) -> (Result);
 }

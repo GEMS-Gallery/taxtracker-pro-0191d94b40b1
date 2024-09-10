@@ -13,6 +13,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DataTable from 'react-data-table-component';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import { backend } from 'declarations/backend';
 
 const theme = createTheme({
@@ -36,18 +39,13 @@ interface TaxPayer {
   address: string;
 }
 
-const columns = [
-  { name: 'TID', selector: (row: TaxPayer) => row.tid, sortable: true },
-  { name: 'First Name', selector: (row: TaxPayer) => row.firstName, sortable: true },
-  { name: 'Last Name', selector: (row: TaxPayer) => row.lastName, sortable: true },
-  { name: 'Address', selector: (row: TaxPayer) => row.address, sortable: true },
-];
-
 function App() {
   const [taxpayers, setTaxpayers] = useState<TaxPayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
   const [newTaxpayer, setNewTaxpayer] = useState<TaxPayer>({ tid: 0, firstName: '', lastName: '', address: '' });
+  const [editTaxpayer, setEditTaxpayer] = useState<TaxPayer>({ tid: 0, firstName: '', lastName: '', address: '' });
   const [searchTid, setSearchTid] = useState('');
   const navigate = useNavigate();
 
@@ -81,6 +79,30 @@ function App() {
     }
   };
 
+  const handleEditTaxpayer = async () => {
+    try {
+      await backend.updateTaxPayer(
+        BigInt(editTaxpayer.tid),
+        editTaxpayer.firstName,
+        editTaxpayer.lastName,
+        editTaxpayer.address
+      );
+      setEditDialog(false);
+      fetchTaxpayers();
+    } catch (error) {
+      console.error('Error updating taxpayer:', error);
+    }
+  };
+
+  const handleDeleteTaxpayer = async (tid: number) => {
+    try {
+      await backend.deleteTaxPayer(BigInt(tid));
+      fetchTaxpayers();
+    } catch (error) {
+      console.error('Error deleting taxpayer:', error);
+    }
+  };
+
   const handleSearch = async () => {
     if (searchTid) {
       try {
@@ -97,6 +119,29 @@ function App() {
       fetchTaxpayers();
     }
   };
+
+  const columns = [
+    { name: 'TID', selector: (row: TaxPayer) => row.tid, sortable: true },
+    { name: 'First Name', selector: (row: TaxPayer) => row.firstName, sortable: true },
+    { name: 'Last Name', selector: (row: TaxPayer) => row.lastName, sortable: true },
+    { name: 'Address', selector: (row: TaxPayer) => row.address, sortable: true },
+    {
+      name: 'Actions',
+      cell: (row: TaxPayer) => (
+        <>
+          <IconButton onClick={() => {
+            setEditTaxpayer(row);
+            setEditDialog(true);
+          }}>
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => handleDeleteTaxpayer(row.tid)}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
   return (
     <ThemeProvider theme={theme}>
@@ -176,6 +221,39 @@ function App() {
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
           <Button onClick={handleAddTaxpayer}>Add</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={editDialog} onClose={() => setEditDialog(false)}>
+        <DialogTitle>Edit TaxPayer</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="First Name"
+            type="text"
+            fullWidth
+            value={editTaxpayer.firstName}
+            onChange={(e) => setEditTaxpayer({ ...editTaxpayer, firstName: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Last Name"
+            type="text"
+            fullWidth
+            value={editTaxpayer.lastName}
+            onChange={(e) => setEditTaxpayer({ ...editTaxpayer, lastName: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Address"
+            type="text"
+            fullWidth
+            value={editTaxpayer.address}
+            onChange={(e) => setEditTaxpayer({ ...editTaxpayer, address: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialog(false)}>Cancel</Button>
+          <Button onClick={handleEditTaxpayer}>Save</Button>
         </DialogActions>
       </Dialog>
     </ThemeProvider>

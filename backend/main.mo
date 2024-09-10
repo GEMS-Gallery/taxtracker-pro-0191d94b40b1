@@ -40,19 +40,26 @@ actor {
     taxpayers.get(tid)
   };
 
-  public func updateTaxPayer(tid: Nat, firstName: ?Text, lastName: ?Text, address: ?Text) : async Result.Result<(), Text> {
+  public func updateTaxPayer(tid: Nat, firstName: Text, lastName: Text, address: Text) : async Result.Result<(), Text> {
     switch (taxpayers.get(tid)) {
       case (null) { #err("TaxPayer with TID " # Nat.toText(tid) # " not found") };
-      case (?taxpayer) {
+      case (?_) {
         let updatedTaxPayer : TaxPayer = {
           tid = tid;
-          firstName = Option.get(firstName, taxpayer.firstName);
-          lastName = Option.get(lastName, taxpayer.lastName);
-          address = Option.get(address, taxpayer.address);
+          firstName = firstName;
+          lastName = lastName;
+          address = address;
         };
         taxpayers.put(tid, updatedTaxPayer);
         #ok()
       };
+    }
+  };
+
+  public func deleteTaxPayer(tid: Nat) : async Result.Result<(), Text> {
+    switch (taxpayers.remove(tid)) {
+      case (null) { #err("TaxPayer with TID " # Nat.toText(tid) # " not found") };
+      case (?_) { #ok() };
     }
   };
 
