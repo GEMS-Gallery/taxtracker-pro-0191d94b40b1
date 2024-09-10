@@ -148,8 +148,12 @@ function App() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ my: 4 }}>
+          <img src="https://example.com/placeholder-image.jpg" alt="Tax Payer Hero" className="hero-image" />
           <Typography variant="h4" component="h1" gutterBottom>
             TaxPayer Management System
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            by Dominic Williams
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <Button variant="contained" onClick={() => setOpenDialog(true)}>
