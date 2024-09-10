@@ -148,7 +148,7 @@ function App() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ my: 4 }}>
-          <img src="https://example.com/placeholder-image.jpg" alt="Tax Payer Hero" className="hero-image" />
+          <img src="https://thumbor.forbes.com/thumbor/fit-in/1290x/https://www.forbes.com/advisor/wp-content/uploads/2024/02/taxpayer-id-number.jpeg" alt="Tax Payer Hero" className="hero-image" />
           <Typography variant="h4" component="h1" gutterBottom>
             TaxPayer Management System
           </Typography>
