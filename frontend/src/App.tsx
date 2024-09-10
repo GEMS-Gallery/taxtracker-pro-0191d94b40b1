@@ -33,7 +33,7 @@ const theme = createTheme({
 });
 
 interface TaxPayer {
-  tid: number;
+  tid: bigint;
   firstName: string;
   lastName: string;
   address: string;
@@ -44,8 +44,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
-  const [newTaxpayer, setNewTaxpayer] = useState<TaxPayer>({ tid: 0, firstName: '', lastName: '', address: '' });
-  const [editTaxpayer, setEditTaxpayer] = useState<TaxPayer>({ tid: 0, firstName: '', lastName: '', address: '' });
+  const [newTaxpayer, setNewTaxpayer] = useState<TaxPayer>({ tid: BigInt(0), firstName: '', lastName: '', address: '' });
+  const [editTaxpayer, setEditTaxpayer] = useState<TaxPayer>({ tid: BigInt(0), firstName: '', lastName: '', address: '' });
   const [searchTid, setSearchTid] = useState('');
   const navigate = useNavigate();
 
@@ -67,7 +67,7 @@ function App() {
   const handleAddTaxpayer = async () => {
     try {
       await backend.addTaxPayer(
-        BigInt(newTaxpayer.tid),
+        newTaxpayer.tid,
         newTaxpayer.firstName,
         newTaxpayer.lastName,
         newTaxpayer.address
@@ -82,7 +82,7 @@ function App() {
   const handleEditTaxpayer = async () => {
     try {
       await backend.updateTaxPayer(
-        BigInt(editTaxpayer.tid),
+        editTaxpayer.tid,
         editTaxpayer.firstName,
         editTaxpayer.lastName,
         editTaxpayer.address
@@ -94,9 +94,9 @@ function App() {
     }
   };
 
-  const handleDeleteTaxpayer = async (tid: number) => {
+  const handleDeleteTaxpayer = async (tid: bigint) => {
     try {
-      await backend.deleteTaxPayer(BigInt(tid));
+      await backend.deleteTaxPayer(tid);
       fetchTaxpayers();
     } catch (error) {
       console.error('Error deleting taxpayer:', error);
@@ -121,7 +121,7 @@ function App() {
   };
 
   const columns = [
-    { name: 'TID', selector: (row: TaxPayer) => row.tid, sortable: true },
+    { name: 'TID', selector: (row: TaxPayer) => row.tid.toString(), sortable: true },
     { name: 'First Name', selector: (row: TaxPayer) => row.firstName, sortable: true },
     { name: 'Last Name', selector: (row: TaxPayer) => row.lastName, sortable: true },
     { name: 'Address', selector: (row: TaxPayer) => row.address, sortable: true },
@@ -190,8 +190,8 @@ function App() {
             label="TID"
             type="number"
             fullWidth
-            value={newTaxpayer.tid}
-            onChange={(e) => setNewTaxpayer({ ...newTaxpayer, tid: parseInt(e.target.value) })}
+            value={newTaxpayer.tid.toString()}
+            onChange={(e) => setNewTaxpayer({ ...newTaxpayer, tid: BigInt(e.target.value) })}
           />
           <TextField
             margin="dense"
@@ -226,6 +226,14 @@ function App() {
       <Dialog open={editDialog} onClose={() => setEditDialog(false)}>
         <DialogTitle>Edit TaxPayer</DialogTitle>
         <DialogContent>
+          <TextField
+            margin="dense"
+            label="TID"
+            type="number"
+            fullWidth
+            value={editTaxpayer.tid.toString()}
+            disabled
+          />
           <TextField
             margin="dense"
             label="First Name"
